@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 
 const Navbar = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all">
@@ -22,31 +22,33 @@ const Navbar = () => {
           <div className="hidden md:flex space-x-8 items-center">
             <Link href="/" className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">Home</Link>
             <Link href="/explore" className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">Explore</Link>
-            
+
             {isAuthenticated && (
               <>
                 <Link href="/dashboard" className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">Dashboard</Link>
-                <Link href="/courses/add" className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">Add Course</Link>
+                {user?.role === 'admin' && (
+                  <Link href="/dashboard/courses/add" className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">Add Course</Link>
+                )}
               </>
             )}
 
             {isAuthenticated ? (
-              <button 
+              <button
                 onClick={logout}
                 className="ml-4 px-4 py-2 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 font-medium transition-colors"
               >
                 Logout
               </button>
             ) : (
-              <Link 
-                href="/login" 
+              <Link
+                href="/login"
                 className="ml-4 px-5 py-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 font-medium transition-all shadow-md hover:shadow-lg"
               >
                 Login
               </Link>
             )}
           </div>
-          
+
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
             <button className="text-slate-500 hover:text-slate-700 focus:outline-none">
