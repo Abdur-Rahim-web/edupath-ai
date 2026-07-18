@@ -24,23 +24,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const login = async (credentials: any) => {
-    // TODO: Implement actual login logic
-    setLoading(true);
-    console.log('Login with', credentials);
-    setLoading(false);
+  const login = async (userData: User) => {
+    setUser(userData);
   };
 
   const logout = () => {
-    // TODO: Implement actual logout logic
     setUser(null);
   };
 
   const register = async (userData: any) => {
-    // TODO: Implement actual register logic
-    setLoading(true);
-    console.log('Register with', userData);
-    setLoading(false);
+    // Currently handled in the form component directly
   };
 
   return (
