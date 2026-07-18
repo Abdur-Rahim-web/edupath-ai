@@ -12,6 +12,27 @@ const dummyCourses = [
   { id: '4', title: 'Cloud Computing Fundamentals (AWS & Azure)', category: 'IT & Software', instructor: 'Michael Smith', level: 'Beginner', price: 0 },
 ];
 
+const FAQItem = ({ faq }: { faq: { q: string, a: string } }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div 
+      className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm cursor-pointer hover:border-indigo-100 transition-colors"
+      onClick={() => setIsOpen(!isOpen)}
+    >
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-bold text-slate-900">{faq.q}</h3>
+        <svg className={`w-5 h-5 text-slate-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+      <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-40 opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+        <p className="text-slate-600">{faq.a}</p>
+      </div>
+    </div>
+  );
+};
+
+
 export default function Home() {
   const [isCoursesLoading, setIsCoursesLoading] = useState(true);
 
@@ -232,10 +253,7 @@ export default function Home() {
               { q: 'Do I get a certificate upon completion?', a: 'Yes! All premium courses and most free courses provide a verified certificate upon successful completion.' },
               { q: 'Can I access the courses on mobile?', a: 'Absolutely. Our platform is fully responsive and works beautifully on desktops, tablets, and smartphones.' }
             ].map((faq, i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm cursor-pointer hover:border-indigo-100 transition-colors">
-                <h3 className="text-lg font-bold text-slate-900 mb-2">{faq.q}</h3>
-                <p className="text-slate-600">{faq.a}</p>
-              </div>
+              <FAQItem key={i} faq={faq} />
             ))}
           </div>
         </div>
