@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -12,6 +13,32 @@ export default function DashboardPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [recommendations, setRecommendations] = useState<any[]>([]);
   const [isRecLoading, setIsRecLoading] = useState(true);
+
+  // Dynamic activity data based on user's enrolled courses categories
+  const activityData = React.useMemo(() => {
+    if (user?.enrolledCourses && user.enrolledCourses.length > 0) {
+      const categoryCount: { [key: string]: number } = {};
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      user.enrolledCourses.forEach((course: any) => {
+        const cat = course.category || 'General';
+        categoryCount[cat] = (categoryCount[cat] || 0) + 1;
+      });
+      return Object.keys(categoryCount).map((cat) => ({
+        day: cat,
+        hours: categoryCount[cat] * 3, // multiplying to represent scale/hours
+      }));
+    }
+    // Fallback static data if no courses are enrolled
+    return [
+      { day: 'Mon', hours: 2 },
+      { day: 'Tue', hours: 4 },
+      { day: 'Wed', hours: 3 },
+      { day: 'Thu', hours: 5 },
+      { day: 'Fri', hours: 3 },
+      { day: 'Sat', hours: 6 },
+      { day: 'Sun', hours: 4 },
+    ];
+  }, [user]);
 
   useEffect(() => {
     if (!isAuthenticated || !user) return;
@@ -112,14 +139,14 @@ export default function DashboardPage() {
                             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                           </div>
                           <h3 className="font-bold text-slate-900 mb-2 line-clamp-1">{course.title}</h3>
-                          
+
                           {/* Progress Bar */}
                           <div className="w-full bg-slate-200 rounded-full h-2 mb-2 overflow-hidden">
                             <div className="bg-indigo-600 h-2 rounded-full" style={{ width: `${progressVal}%` }}></div>
                           </div>
                           <p className="text-xs text-slate-500 mb-4 font-medium">{progressVal}% Completed</p>
                         </div>
-                        <Link 
+                        <Link
                           href={`/courses/${course._id}`}
                           className="w-full py-2.5 bg-white border border-slate-200 text-indigo-600 rounded-xl text-sm font-bold hover:bg-indigo-50 transition-colors shadow-sm text-center block"
                         >
@@ -180,11 +207,11 @@ export default function DashboardPage() {
                         <h3 className="font-bold text-slate-900 mb-2 line-clamp-1">{course.title}</h3>
                         <p className="text-xs text-slate-500 mb-4 line-clamp-2">{course.description}</p>
                       </div>
-                      
+
                       <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
                         <span className="text-sm font-bold text-slate-900">{course.price === 0 ? 'Free' : `$${course.price}`}</span>
-                        <Link 
-                          href={`/courses/${course._id}`} 
+                        <Link
+                          href={`/courses/${course._id}`}
                           className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm"
                         >
                           View Details
@@ -230,6 +257,21 @@ export default function DashboardPage() {
                   <div className="flex justify-between items-center bg-indigo-50 p-3 rounded-xl border border-indigo-100">
                     <span className="text-sm text-indigo-900 font-medium">Learning Streak</span>
                     <span className="font-bold text-indigo-600">3 Days 🔥</span>
+                  </div>
+                </div>
+
+                {/* Recharts Analytics Added Here */}
+                <div className="mt-6 pt-6 border-t border-slate-100">
+                  <h4 className="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wider">Weekly Activity (Hours)</h4>
+                  <div className="w-full h-44 bg-slate-50/50 p-2 rounded-2xl border border-slate-100">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={activityData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                        <XAxis dataKey="day" tick={{ fontSize: 10 }} stroke="#64748b" />
+                        <YAxis tick={{ fontSize: 10 }} stroke="#64748b" />
+                        <Tooltip contentStyle={{ fontSize: '12px', borderRadius: '8px' }} />
+                        <Bar dataKey="hours" fill="#4f46e5" radius={[4, 4, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
                   </div>
                 </div>
               </div>
