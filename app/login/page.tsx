@@ -60,6 +60,7 @@ function LoginForm() {
       await login(data.user);
       const redirect = searchParams.get('redirect') ?? '/dashboard';
       router.push(redirect);
+      router.refresh();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
@@ -82,6 +83,7 @@ function LoginForm() {
 
       await login(data.user);
       router.push('/dashboard');
+      router.refresh();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
