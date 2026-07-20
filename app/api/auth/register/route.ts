@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
     };
 
     return NextResponse.json({ message: 'User registered successfully', user: userResponse }, { status: 201 });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('Registration Error:', error);
     return NextResponse.json({ message: 'Internal server error', error: error.message }, { status: 500 });

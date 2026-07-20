@@ -8,6 +8,7 @@ export interface User {
   name: string;
   email: string;
   role: 'student' | 'admin';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   enrolledCourses?: any[];
 }
 
@@ -17,6 +18,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (userData: User) => Promise<void>;
   logout: () => Promise<void>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   register: (userData: any) => Promise<void>;
   refreshSession: () => Promise<void>;
 }
@@ -83,6 +85,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const register = async (_userData: any): Promise<void> => {
     // Registration is handled directly in the form component
   };

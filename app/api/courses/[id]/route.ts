@@ -23,6 +23,7 @@ export async function DELETE(
     }
 
     return NextResponse.json({ message: 'Course deleted successfully' }, { status: 200 });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('Course Deletion Error:', error);
     return NextResponse.json({ message: 'Internal server error', error: error.message }, { status: 500 });

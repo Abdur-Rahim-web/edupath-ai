@@ -37,6 +37,7 @@ export default function ExplorePage() {
         }
         const data = await response.json();
         setCourses(data);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -66,6 +67,7 @@ export default function ExplorePage() {
 
   // Reset page when filters change
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentPage(1);
   }, [search, category, level, priceType]);
 

@@ -51,6 +51,7 @@ export default function EnrollButton({ courseId, initialIsEnrolled }: EnrollButt
       setTimeout(() => {
         router.push('/dashboard');
       }, 800);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
     } finally {

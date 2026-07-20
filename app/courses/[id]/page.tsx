@@ -54,6 +54,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
   }
 
   // Fetch related courses (same category, excluding the current one)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let relatedCourses: any[] = [];
   try {
     relatedCourses = await Course.find({

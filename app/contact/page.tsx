@@ -12,7 +12,7 @@ export default function ContactPage() {
         <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight mb-8">Contact Us</h1>
         <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200/60">
           <p className="text-lg text-slate-600 leading-relaxed mb-8">
-            Have questions or need assistance? Our support team is here to help. Fill out the form below and we'll get back to you as soon as possible.
+            Have questions or need assistance? Our support team is here to help. Fill out the form below and we&apos;ll get back to you as soon as possible.
           </p>
           
           <form className="space-y-6">

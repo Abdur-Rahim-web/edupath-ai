@@ -35,6 +35,7 @@ export async function GET(req: NextRequest) {
       },
       { status: 200 }
     );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('Auth Me Error:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });

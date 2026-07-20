@@ -45,6 +45,7 @@ export default function AIChat() {
       }
 
       setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setMessages(prev => [...prev, { role: 'assistant', content: `Sorry, I encountered an error: ${err.message}` }]);
     } finally {

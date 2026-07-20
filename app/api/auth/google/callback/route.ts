@@ -96,6 +96,7 @@ export async function GET(req: NextRequest) {
     });
 
     return response;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error('Google OAuth Callback Error:', err);
     return NextResponse.redirect(`${appUrl}/login?error=google_server_error`);

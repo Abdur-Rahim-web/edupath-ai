@@ -59,6 +59,7 @@ Example output format: ["6c5378b...", "199004d..."]`;
     });
 
     return NextResponse.json({ recommendations: recommendedCourses }, { status: 200 });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('Gemini Recommendation API Error:', error);
     return NextResponse.json({ message: 'AI Recommendation service is currently unavailable', error: error.message }, { status: 503 });

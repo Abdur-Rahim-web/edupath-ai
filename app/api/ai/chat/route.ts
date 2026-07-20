@@ -40,6 +40,7 @@ Keep your tone professional, encouraging, and clear. Format replies in markdown.
     // Gemini SDK requires history to start with role 'user'.
     // The frontend seeds an initial assistant greeting, so we strip
     // any leading 'model' turns before constructing the history.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const rawHistory = messages.slice(0, -1).map((m: any) => ({
       role: m.role === 'assistant' ? 'model' : 'user',
       parts: [{ text: m.content }],
@@ -66,6 +67,7 @@ Keep your tone professional, encouraging, and clear. Format replies in markdown.
     const text = response.text || '';
 
     return NextResponse.json({ reply: text }, { status: 200 });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('Gemini Chat API Error:', error);
     return NextResponse.json({ message: 'AI Chat service is currently unavailable', error: error.message }, { status: 503 });

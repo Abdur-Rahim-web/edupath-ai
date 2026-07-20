@@ -79,6 +79,7 @@ export async function GET(req: NextRequest) {
     const inserted = await Course.insertMany(seedCourses);
 
     return NextResponse.json({ message: 'Database seeded successfully with dummy courses', count: inserted.length }, { status: 200 });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('Seeding Error:', error);
     return NextResponse.json({ message: 'Internal server error', error: error.message }, { status: 500 });

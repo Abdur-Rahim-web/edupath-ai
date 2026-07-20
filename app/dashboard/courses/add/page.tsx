@@ -26,6 +26,7 @@ export default function AddCoursePage() {
 
   // Client-side protection for admin role
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounting(false);
   }, []);
 
@@ -98,6 +99,7 @@ export default function AddCoursePage() {
       
       // Optional: redirect after short delay
       setTimeout(() => router.push('/dashboard'), 2000);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
     } finally {

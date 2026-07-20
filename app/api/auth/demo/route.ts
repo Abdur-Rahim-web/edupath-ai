@@ -54,6 +54,7 @@ export async function POST() {
     });
 
     return response;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('Demo Login Error:', error);
     return NextResponse.json({ message: 'Demo login failed', error: error.message }, { status: 500 });

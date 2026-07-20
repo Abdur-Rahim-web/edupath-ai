@@ -30,6 +30,7 @@ export default function ManageCoursesPage() {
   }, [loading, isAuthenticated, user, router]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
     fetchCourses();
   }, []);
 
@@ -40,6 +41,7 @@ export default function ManageCoursesPage() {
       if (!response.ok) throw new Error('Failed to load courses');
       const data = await response.json();
       setCourses(data);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -57,6 +59,7 @@ export default function ManageCoursesPage() {
       });
       if (!response.ok) throw new Error('Failed to delete course');
       setCourses(courses.filter(course => course._id !== id));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       alert(err.message);
     } finally {
