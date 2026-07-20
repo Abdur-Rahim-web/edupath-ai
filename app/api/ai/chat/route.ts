@@ -57,7 +57,7 @@ Keep your tone professional, encouraging, and clear. Format replies in markdown.
     const contents = [...history, { role: 'user', parts: [{ text: latestMessage }] }];
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-3.5-flash',
       contents: contents,
       config: {
         systemInstruction: systemInstruction,
