@@ -12,9 +12,12 @@ export default function AddCoursePage() {
 
   const [formData, setFormData] = useState({
     title: '',
+    shortDescription: '',
     description: '',
     category: 'Development',
     level: 'Beginner',
+    duration: '',
+    imageUrl: '',
     price: '',
   });
   const [error, setError] = useState('');
@@ -31,7 +34,7 @@ export default function AddCoursePage() {
       if (!isAuthenticated) {
         router.push('/login');
       } else if (user?.role !== 'admin') {
-        // Redirect non-admins to dashboard
+        // Redirect non-authorized to dashboard
         router.push('/dashboard');
       }
     }
@@ -56,8 +59,8 @@ export default function AddCoursePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.title || !formData.description) {
-      setError('Title and Description are required.');
+    if (!formData.title || !formData.shortDescription || !formData.description || !formData.duration) {
+      setError('Title, Short Description, Full Description, and Duration are required.');
       return;
     }
 
@@ -84,9 +87,12 @@ export default function AddCoursePage() {
       setSuccess(true);
       setFormData({
         title: '',
+        shortDescription: '',
         description: '',
         category: 'Development',
         level: 'Beginner',
+        duration: '',
+        imageUrl: '',
         price: '',
       });
       
@@ -145,7 +151,21 @@ export default function AddCoursePage() {
             </div>
 
             <div>
-              <label htmlFor="description" className="block text-sm font-bold text-slate-700 mb-1">Description</label>
+              <label htmlFor="shortDescription" className="block text-sm font-bold text-slate-700 mb-1">Short Description</label>
+              <textarea
+                id="shortDescription"
+                name="shortDescription"
+                required
+                rows={2}
+                value={formData.shortDescription}
+                onChange={handleChange}
+                placeholder="A brief summary of the course..."
+                className="appearance-none block w-full px-4 py-3 border border-slate-300 rounded-xl shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 sm:text-sm transition-all resize-none"
+              ></textarea>
+            </div>
+
+            <div>
+              <label htmlFor="description" className="block text-sm font-bold text-slate-700 mb-1">Full Description</label>
               <textarea
                 id="description"
                 name="description"
@@ -191,6 +211,35 @@ export default function AddCoursePage() {
                   <option value="Advanced">Advanced</option>
                   <option value="All Levels">All Levels</option>
                 </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label htmlFor="duration" className="block text-sm font-bold text-slate-700 mb-1">Duration</label>
+                <input
+                  type="text"
+                  id="duration"
+                  name="duration"
+                  required
+                  value={formData.duration}
+                  onChange={handleChange}
+                  placeholder="e.g. 10 hours, 4 weeks"
+                  className="appearance-none block w-full px-4 py-3 border border-slate-300 rounded-xl shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 sm:text-sm transition-all"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="imageUrl" className="block text-sm font-bold text-slate-700 mb-1">Image URL</label>
+                <input
+                  type="url"
+                  id="imageUrl"
+                  name="imageUrl"
+                  value={formData.imageUrl}
+                  onChange={handleChange}
+                  placeholder="https://example.com/image.jpg"
+                  className="appearance-none block w-full px-4 py-3 border border-slate-300 rounded-xl shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 sm:text-sm transition-all"
+                />
               </div>
             </div>
 

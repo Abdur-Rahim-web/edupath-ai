@@ -7,17 +7,20 @@ export async function POST(req: NextRequest) {
     await connectToDatabase();
 
     const body = await req.json();
-    const { title, description, category, level, price, instructor } = body;
+    const { title, shortDescription, description, category, level, duration, price, imageUrl, instructor } = body;
 
-    if (!title || !description || !category || !level) {
+    if (!title || !description || !category || !level || !shortDescription || !duration) {
       return NextResponse.json({ message: 'Please provide all required fields' }, { status: 400 });
     }
 
     const newCourse = await Course.create({
       title,
+      shortDescription,
       description,
       category,
       level,
+      duration,
+      imageUrl: imageUrl || '',
       price: Number(price) || 0,
       instructor: instructor || 'Admin', // Fallback instructor
     });
@@ -28,3 +31,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'Internal server error', error: error.message }, { status: 500 });
   }
 }
+
+export async function GET(req: NextRequest) {
+  try {
+    await connectToDatabase();
+    const courses = await Course.find({}).sort({ createdAt: -1 });
+    return NextResponse.json(courses, { status: 200 });
+  } catch (error: any) {
+    console.error('Fetch Courses Error:', error);
+    return NextResponse.json({ message: 'Internal server error', error: error.message }, { status: 500 });
+  }
+}
+

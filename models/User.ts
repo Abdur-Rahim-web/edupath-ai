@@ -6,15 +6,17 @@ export interface IUser extends Document {
   password?: string;
   role: 'student' | 'admin';
   enrolledCourses: mongoose.Types.ObjectId[];
+  googleId?: string;
 }
 
 const UserSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String, required: false },
     role: { type: String, enum: ['student', 'admin'], default: 'student' },
     enrolledCourses: [{ type: Schema.Types.ObjectId, ref: 'Course' }],
+    googleId: { type: String, sparse: true, unique: true },
   },
   { timestamps: true }
 );
@@ -22,3 +24,4 @@ const UserSchema = new Schema<IUser>(
 const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
 
 export default User;
+

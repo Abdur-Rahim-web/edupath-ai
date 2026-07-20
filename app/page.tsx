@@ -3,45 +3,28 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import CourseCard, { CourseCardSkeleton } from '@/components/CourseCard';
-
-// Dummy data for featured courses
-const dummyCourses = [
-  { id: '1', title: 'Mastering Machine Learning with Python', category: 'Data Science', instructor: 'Dr. Sarah Connor', level: 'Advanced', price: 89.99 },
-  { id: '2', title: 'Full-Stack Web Development Bootcamp', category: 'Development', instructor: 'John Doe', level: 'Beginner', price: 120.00 },
-  { id: '3', title: 'UI/UX Design Masterclass', category: 'Design', instructor: 'Emily Chen', level: 'Intermediate', price: 45.00 },
-  { id: '4', title: 'Cloud Computing Fundamentals (AWS & Azure)', category: 'IT & Software', instructor: 'Michael Smith', level: 'Beginner', price: 0 },
-];
-
-const FAQItem = ({ faq }: { faq: { q: string, a: string } }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  return (
-    <div 
-      className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm cursor-pointer hover:border-indigo-100 transition-colors"
-      onClick={() => setIsOpen(!isOpen)}
-    >
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-bold text-slate-900">{faq.q}</h3>
-        <svg className={`w-5 h-5 text-slate-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </div>
-      <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-40 opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
-        <p className="text-slate-600">{faq.a}</p>
-      </div>
-    </div>
-  );
-};
-
+import FAQItem from '@/components/FAQItem';
 
 export default function Home() {
+  const [courses, setCourses] = useState<any[]>([]);
   const [isCoursesLoading, setIsCoursesLoading] = useState(true);
 
-  // Simulate data fetching
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsCoursesLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
+    const fetchCourses = async () => {
+      try {
+        const response = await fetch('/api/courses');
+        if (response.ok) {
+          const data = await response.json();
+          // Take the first 4 courses as featured
+          setCourses(data.slice(0, 4));
+        }
+      } catch (e) {
+        console.error('Failed to load featured courses:', e);
+      } finally {
+        setIsCoursesLoading(false);
+      }
+    };
+    fetchCourses();
   }, []);
 
   return (
@@ -78,7 +61,7 @@ export default function Home() {
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Explore Top Categories</h2>
             <p className="text-slate-600 max-w-2xl mx-auto">Find the perfect course in your desired field. We offer a wide range of subjects to help you advance your career.</p>
           </div>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             {['Development', 'Business', 'Design', 'Marketing', 'Data Science', 'Photography'].map((category, idx) => (
               <div key={idx} className="group cursor-pointer flex flex-col items-center p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-indigo-50 hover:border-indigo-100 transition-colors duration-300">
@@ -101,17 +84,32 @@ export default function Home() {
               <p className="text-slate-600 max-w-2xl">Hand-picked courses from top instructors to kickstart your journey.</p>
             </div>
             <Link href="/explore" className="inline-flex items-center text-indigo-600 font-semibold hover:text-indigo-700 transition-colors pb-1">
-              View All 
+              View All
               <svg className="w-5 h-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
             </Link>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {isCoursesLoading 
+            {isCoursesLoading
               ? Array.from({ length: 4 }).map((_, i) => <CourseCardSkeleton key={i} />)
-              : dummyCourses.map(course => (
-                <CourseCard key={course.id} {...course} />
-              ))
+              : courses.length > 0 ? (
+                courses.map(course => (
+                  <CourseCard
+                    key={course._id}
+                    id={course._id}
+                    title={course.title}
+                    category={course.category}
+                    instructor={course.instructor}
+                    level={course.level}
+                    price={course.price}
+                    imageUrl={course.imageUrl}
+                  />
+                ))
+              ) : (
+                <div className="col-span-1 sm:col-span-2 lg:col-span-4 text-center py-8">
+                  <p className="text-slate-500">No courses available at this moment.</p>
+                </div>
+              )
             }
           </div>
         </div>
@@ -124,7 +122,7 @@ export default function Home() {
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Why Choose EduPath AI?</h2>
             <p className="text-slate-600 max-w-2xl mx-auto">We combine cutting-edge technology with world-class education to deliver an unparalleled learning experience.</p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { title: 'Expert Instructors', desc: 'Learn from industry professionals with years of real-world experience.', icon: 'M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
@@ -154,7 +152,7 @@ export default function Home() {
             <h2 className="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
             <p className="text-slate-400 max-w-2xl mx-auto">Start your learning journey in three simple steps.</p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
             <div className="hidden md:block absolute top-12 left-[15%] right-[15%] h-0.5 bg-slate-700 z-0"></div>
             {[
@@ -181,7 +179,7 @@ export default function Home() {
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">What Our Students Say</h2>
             <p className="text-slate-600 max-w-2xl mx-auto">Join thousands of happy learners who have transformed their careers.</p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               { name: 'Alex Johnson', role: 'Frontend Developer', quote: 'EduPath AI completely changed how I learn. The personalized path helped me land my dream job in just 6 months!' },
@@ -214,19 +212,19 @@ export default function Home() {
           <div className="bg-indigo-600 rounded-3xl p-8 md:p-16 text-center shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-indigo-500 blur-3xl opacity-50"></div>
             <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 rounded-full bg-indigo-700 blur-3xl opacity-50"></div>
-            
+
             <div className="relative z-10">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to Transform Your Career?</h2>
               <p className="text-indigo-100 mb-10 max-w-2xl mx-auto">Subscribe to our newsletter to get the latest courses, updates, and exclusive discounts right in your inbox.</p>
-              
+
               <form className="flex flex-col sm:flex-row max-w-lg mx-auto gap-4" onSubmit={(e) => e.preventDefault()}>
-                <input 
-                  type="email" 
-                  placeholder="Enter your email address" 
+                <input
+                  type="email"
+                  placeholder="Enter your email address"
                   className="flex-grow px-6 py-4 rounded-full border-none focus:ring-4 focus:ring-indigo-400/50 outline-none shadow-inner text-slate-900"
                   required
                 />
-                <button 
+                <button
                   type="submit"
                   className="px-8 py-4 bg-slate-900 text-white rounded-full font-bold hover:bg-slate-800 transition-colors shadow-lg"
                 >
@@ -245,7 +243,7 @@ export default function Home() {
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
             <p className="text-slate-600">Got questions? We've got answers.</p>
           </div>
-          
+
           <div className="space-y-6">
             {[
               { q: 'Is EduPath AI free to use?', a: 'Creating an account and exploring the catalog is completely free. We offer both free and premium courses.' },
